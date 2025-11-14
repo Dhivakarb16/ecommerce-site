@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mini E-Commerce Portal</title>
+  <style>
+    :root{--accent:#0b69ff;--muted:#666;--card:#fff;--bg:#f5f7fb}
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;margin:0;background:var(--bg);color:#222}
+    header{background:linear-gradient(90deg,var(--accent),#3aa0ff);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+    .brand{font-weight:700;font-size:1.2rem}
+    nav a{color:#fff;text-decoration:none;margin:0 10px;padding:8px;border-radius:6px}
+    nav a:hover{background:rgba(255,255,255,0.12)}
+    .container{max-width:1100px;margin:20px auto;padding:16px}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:20px}
+    .card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(15,15,15,0.06)}
+    .product-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+    .product{border-radius:8px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+    .product img{width:100%;height:150px;object-fit:cover}
+    .product .body{padding:10px;flex:1;display:flex;flex-direction:column}
+    .btn{display:inline-block;padding:8px 10px;border-radius:8px;text-decoration:none;border:none;cursor:pointer}
+    .btn-primary{background:var(--accent);color:#fff}
+    .btn-ghost{background:transparent;border:1px solid #ddd}
+    .muted{color:var(--muted);font-size:0.9rem}
+    form .row{display:flex;gap:8px}
+    input,textarea,select{width:100%;padding:8px;border-radius:8px;border:1px solid #ddd}
+    label{font-weight:600;font-size:0.9rem}
+    .small{font-size:0.85rem}
+    ul{padding-left:18px}
+    .list-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed #f0f0f0}
+    .right{display:flex;gap:8px;align-items:center}
+    footer{padding:20px;text-align:center;color:var(--muted)}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}.container{padding:10px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">ShopMate</div>
+    <nav>
+      <a href="#home" data-nav>Home</a>
+      <a href="#products" data-nav>Products</a>
+      <a href="#contact" data-nav>Contact Us</a>
+      <a href="#about" data-nav>About Us</a>
+      <a href="#account" data-nav id="accountBtn">Login / Register</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- HOME + HERO -->
+    <section id="home" class="card" style="margin-bottom:16px">
+      <h2>Welcome to ShopMate</h2>
+      <p class="muted">A demo e-commerce portal built with HTML, CSS & JavaScript. Use the menu to navigate, register/login and test features like wishlist, orders, reviews and customer care.</p>
+    </section>
+
+    <div class="grid">
+      <section>
+        <!-- PRODUCTS -->
+        <section id="products" class="card" style="margin-bottom:16px">
+          <h3>Products</h3>
+          <div class="product-list" id="productList"></div>
+        </section>
+
+        <!-- REVIEWS / COMMENTS -->
+        <section id="reviews" class="card" style="margin-bottom:16px">
+          <h3>Comments & Reviews</h3>
+          <div id="reviewsList"></div>
+          <hr/>
+          <form id="reviewForm">
+            <label for="reviewText">Add a review</label>
+            <textarea id="reviewText" rows="3" placeholder="Share your thoughts"></textarea>
+            <div style="margin-top:8px;text-align:right"><button class="btn btn-primary" type="submit">Post Review</button></div>
+          </form>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="card" style="margin-bottom:16px">
+          <h3>About Us</h3>
+          <p class="muted">ShopMate is a learning demo that simulates typical e-commerce features using only front-end technologies. All data persists locally in your browser (localStorage).</p>
+        </section>
+
+      </section>
+
+      <aside>
+        <!-- Account/Login/Register -->
+        <section id="account" class="card">
+          <h3 id="authTitle">Login</h3>
+
+          <div id="authForms">
+            <!-- Login -->
+            <form id="loginForm">
+              <label>Email</label>
+              <input type="email" id="loginEmail" required />
+              <label>Password</label>
+              <input type="password" id="loginPass" required minlength="6" />
+              <div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end">
+                <button class="btn btn-ghost" type="button" id="showRegister">Register</button>
+                <button class="btn btn-primary" type="submit">Login</button>
+              </div>
+              <p id="loginMsg" class="small muted"></p>
+            </form>
+
+            <!-- Register (hidden) -->
+            <form id="registerForm" style="display:none">
+              <label>Full name</label>
+              <input id="regName" required />
+              <label>Email</label>
+              <input id="regEmail" type="email" required />
+              <label>Phone</label>
+              <input id="regPhone" required minlength="10" maxlength="15" />
+              <label>Password</label>
+              <input id="regPass" type="password" required minlength="6" />
+              <label>Confirm Password</label>
+              <input id="regPass2" type="password" required minlength="6" />
+              <div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end">
+                <button class="btn btn-ghost" type="button" id="showLogin">Back</button>
+                <button class="btn btn-primary" type="submit">Register</button>
+              </div>
+              <p id="regMsg" class="small muted"></p>
+            </form>
+          </div>
+
+          <div id="profileBox" style="display:none;margin-top:12px"></div>
+        </section>
+
+        <!-- WISHLIST -->
+        <section id="wishlist" class="card" style="margin-top:16px">
+          <h3>Wishlist</h3>
+          <div id="wishlistList"></div>
+        </section>
+
+        <!-- ORDERS -->
+        <section id="orders" class="card" style="margin-top:16px">
+          <h3>Your Orders</h3>
+          <div id="ordersList"></div>
+        </section>
+
+        <!-- CUSTOMER CARE & REPORTING -->
+        <section id="contact" class="card" style="margin-top:16px">
+          <h3>Customer Care</h3>
+          <form id="careForm">
+            <label>Name</label>
+            <input id="careName" required />
+            <label>Email</label>
+            <input id="careEmail" type="email" required />
+            <label>Issue Type</label>
+            <select id="careType"><option>Order</option><option>Payment</option><option>Product</option><option>Other</option></select>
+            <label>Message</label>
+            <textarea id="careMsg" rows="3"></textarea>
+            <div style="text-align:right;margin-top:8px"><button class="btn btn-primary" type="submit">Send</button></div>
+            <p id="careResp" class="small muted"></p>
+          </form>
+
+          <hr/>
+          <h4>Reporting Options</h4>
+          <p class="small muted">Report inappropriate reviews or request refund. Use buttons in lists where available.</p>
+        </section>
+
+      </aside>
+    </div>
+
+    <footer class="card" style="margin-top:20px">
+      <small>&copy; 2025 ShopMate — Demo E-Commerce Portal</small>
+    </footer>
+  </main>
+
+  <script>
+    /************* Demo Data & LocalStorage helpers *************/
+    const sampleProducts = [
+      {id:'p1',title:'Wireless Headphones',price:1999,desc:'Comfortable noise-cancelling headphones',img:'https://picsum.photos/seed/p1/400/300'},
+      {id:'p2',title:'Smart Watch',price:3499,desc:'Track your fitness & notifications',img:'https://picsum.photos/seed/p2/400/300'},
+      {id:'p3',title:'Backpack',price:899,desc:'Durable travel backpack',img:'https://picsum.photos/seed/p3/400/300'},
+      {id:'p4',title:'Bluetooth Speaker',price:1299,desc:'Portable speaker with deep bass',img:'https://picsum.photos/seed/p4/400/300'}
+    ];
+
+    function read(key, fallback){ try{ const v = localStorage.getItem(key); return v?JSON.parse(v):fallback; }catch(e){return fallback} }
+    function write(key,val){ localStorage.setItem(key,JSON.stringify(val)); }
+
+    // Initialize
+    if(!read('products')) write('products', sampleProducts);
+    if(!read('users')) write('users', []);
+    if(!read('wishlist')) write('wishlist', {}); // {userEmail: [productIds]}
+    if(!read('orders')) write('orders', {}); // {userEmail: [orders]}
+    if(!read('reviews')) write('reviews', []); // {id, user, text, date}
+
+    /************* Rendering Products *************/
+    const productListEl = document.getElementById('productList');
+    function renderProducts(){
+      const products = read('products', []);
+      productListEl.innerHTML = '';
+      products.forEach(p=>{
+        const div = document.createElement('div'); div.className='product card';
+        div.innerHTML = `
+          <img src="${p.img}" alt="${p.title}" />
+          <div class="body">
+            <strong>${p.title}</strong>
+            <p class="muted small">${p.desc}</p>
+            <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center">
+              <div><strong>₹ ${p.price}</strong></div>
+              <div class="right">
+                <button class="btn btn-ghost" data-action="wish" data-id="${p.id}">Wishlist</button>
+                <button class="btn btn-primary" data-action="buy" data-id="${p.id}">Buy</button>
+              </div>
+            </div>
+          </div>`;
+        productListEl.appendChild(div);
+      });
+    }
+
+    // Delegation for product actions
+    productListEl.addEventListener('click', e=>{
+      const btn = e.target.closest('button'); if(!btn) return;
+      const action = btn.dataset.action; const id = btn.dataset.id; const user = currentUser();
+      if(action==='wish'){
+        if(!user){alert('Please login to add to wishlist'); return}
+        toggleWishlist(user.email,id);
+      }else if(action==='buy'){
+        if(!user){alert('Please login to place order'); return}
+        placeOrder(user.email,id);
+      }
+    });
+
+    /************* Wishlist *************/
+    function toggleWishlist(email, pid){
+      const wl = read('wishlist', {});
+      wl[email] = wl[email]||[];
+      const idx = wl[email].indexOf(pid);
+      if(idx===-1) wl[email].push(pid); else wl[email].splice(idx,1);
+      write('wishlist', wl); renderWishlist();
+    }
+    function renderWishlist(){
+      const el = document.getElementById('wishlistList'); el.innerHTML='';
+      const user = currentUser(); if(!user){el.innerHTML='<p class="small muted">Login to see your wishlist.</p>'; return}
+      const wl = read('wishlist', {})[user.email]||[];
+      if(!wl.length) { el.innerHTML='<p class="small muted">No items in wishlist.</p>'; return }
+      const products = read('products',[]).filter(p=>wl.includes(p.id));
+      products.forEach(p=>{
+        const row = document.createElement('div'); row.className='list-item';
+        row.innerHTML = `<div>${p.title} <div class="small muted">₹ ${p.price}</div></div><div class="right"><button class="btn btn-ghost" data-wish-id="${p.id}">Remove</button><button class="btn btn-primary" data-buy-id="${p.id}">Buy</button></div>`;
+        el.appendChild(row);
+      });
+      // handlers
+      el.querySelectorAll('[data-wish-id]').forEach(b=>b.addEventListener('click', e=>{
+        toggleWishlist(user.email,b.dataset.wishId);
+      }));
+      el.querySelectorAll('[data-buy-id]').forEach(b=>b.addEventListener('click', e=>{
+        placeOrder(user.email,b.dataset.buyId);
+      }));
+    }
+
+    /************* Orders *************/
+    function placeOrder(email,pid){
+      const orders = read('orders', {});
+      orders[email] = orders[email]||[];
+      const products = read('products',[]);
+      const p = products.find(x=>x.id===pid);
+      const order = {orderId:'ORD'+Date.now(), product:p, date:new Date().toLocaleString(), status:'Processing'};
+      orders[email].push(order); write('orders', orders); renderOrders(); alert('Order placed: '+order.orderId);
+    }
+    function renderOrders(){
+      const el = document.getElementById('ordersList'); el.innerHTML='';
+      const user = currentUser(); if(!user){el.innerHTML='<p class="small muted">Login to see your orders.</p>'; return}
+      const orders = read('orders', {})[user.email]||[];
+      if(!orders.length){el.innerHTML='<p class="small muted">No orders yet.</p>'; return}
+      orders.slice().reverse().forEach(o=>{
+        const row = document.createElement('div'); row.className='list-item';
+        row.innerHTML = `<div><strong>${o.product.title}</strong><div class="small muted">${o.date} · ${o.status}</div></div><div class="right"><button class="btn btn-ghost" data-report="${o.orderId}">Report</button></div>`;
+        el.appendChild(row);
+      });
+      el.querySelectorAll('[data-report]').forEach(b=>b.addEventListener('click', e=>{
+        alert('Reported order '+b.dataset.report+'. Our customer care will contact you.');
+      }));
+    }
+
+    /************* Reviews & Comments *************/
+    function renderReviews(){
+      const el = document.getElementById('reviewsList'); el.innerHTML='';
+      const reviews = read('reviews',[]);
+      if(!reviews.length){el.innerHTML='<p class="small muted">No reviews yet. Be the first to review!</p>'; return}
+      reviews.slice().reverse().forEach(r=>{
+        const div = document.createElement('div'); div.className='list-item';
+        div.innerHTML = `<div><strong>${r.user}</strong> <div class="small muted">${r.date}</div><div class="muted">${r.text}</div></div><div class="right"><button class="btn btn-ghost" data-report-review="${r.id}">Report</button></div>`;
+        el.appendChild(div);
+      });
+      el.querySelectorAll('[data-report-review]').forEach(b=>b.addEventListener('click', e=>{
+        alert('Reported review '+b.dataset.reportReview);
+      }));
+    }
+    document.getElementById('reviewForm').addEventListener('submit', e=>{
+      e.preventDefault(); const text = document.getElementById('reviewText').value.trim(); if(!text) return alert('Review cannot be empty');
+      const user = currentUser(); const reviews = read('reviews',[]);
+      const review = {id:'R'+Date.now(), user:user?user.name:'Guest', text, date:new Date().toLocaleString()};
+      reviews.push(review); write('reviews', reviews); document.getElementById('reviewText').value=''; renderReviews();
+    });
+
+    /************* Customer Care *************/
+    document.getElementById('careForm').addEventListener('submit', e=>{
+      e.preventDefault(); const name=document.getElementById('careName').value.trim(); const email=document.getElementById('careEmail').value.trim(); const type=document.getElementById('careType').value; const msg=document.getElementById('careMsg').value.trim();
+      if(!name||!email){document.getElementById('careResp').textContent='Please provide name and email.'; return}
+      document.getElementById('careResp').textContent='Thanks — your message has been recorded. We will contact you via email.';
+      console.log('Customer Care message', {name,email,type,msg});
+    });
+
+    /************* Authentication (simple) & Validation *************/
+    function currentUser(){ return read('session', null); }
+
+    const authTitle = document.getElementById('authTitle');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const showRegisterBtn = document.getElementById('showRegister');
+    const showLoginBtn = document.getElementById('showLogin');
+    const accountBtn = document.getElementById('accountBtn');
+
+    showRegisterBtn.addEventListener('click', ()=>{loginForm.style.display='none'; registerForm.style.display='block'; authTitle.textContent='Register'});
+    showLoginBtn.addEventListener('click', ()=>{loginForm.style.display='block'; registerForm.style.display='none'; authTitle.textContent='Login'});
+
+    // Registration validation & submission
+    registerForm.addEventListener('submit', e=>{
+      e.preventDefault();
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim().toLowerCase();
+      const phone = document.getElementById('regPhone').value.trim();
+      const pass = document.getElementById('regPass').value;
+      const pass2 = document.getElementById('regPass2').value;
+      const msg = document.getElementById('regMsg'); msg.textContent='';
+      if(!name||!email||!phone||!pass||!pass2){msg.textContent='All fields are required.'; return}
+      if(!validateEmail(email)){msg.textContent='Invalid email.'; return}
+      if(!/^[0-9()+\-\s]{8,15}$/.test(phone)){msg.textContent='Invalid phone number.'; return}
+      if(pass.length<6){msg.textContent='Password must be at least 6 characters.'; return}
+      if(pass!==pass2){msg.textContent='Passwords do not match.'; return}
+      const users = read('users',[]);
+      if(users.some(u=>u.email===email)){msg.textContent='User already exists. Try login.'; return}
+      users.push({name,email,phone,pass}); write('users', users);
+      // auto-login
+      write('session', {name,email}); updateAuthUI(); msg.textContent='Registered and logged in.'; renderWishlist(); renderOrders();
+    });
+
+    // Login
+    loginForm.addEventListener('submit', e=>{
+      e.preventDefault(); const email=document.getElementById('loginEmail').value.trim().toLowerCase(); const pass=document.getElementById('loginPass').value; const msg=document.getElementById('loginMsg'); msg.textContent='';
+      if(!validateEmail(email)){msg.textContent='Invalid email.'; return}
+      const users = read('users',[]); const user = users.find(u=>u.email===email && u.pass===pass);
+      if(!user){msg.textContent='Email or password incorrect.'; return}
+      write('session', {name:user.name,email:user.email}); updateAuthUI(); renderWishlist(); renderOrders(); msg.textContent='Logged in.';
+    });
+
+    function validateEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+    function updateAuthUI(){
+      const user = currentUser(); const profileBox = document.getElementById('profileBox');
+      if(user){
+        document.getElementById('authForms').style.display='none';
+        profileBox.style.display='block'; profileBox.innerHTML = `<div><strong>${user.name}</strong><div class="muted">${user.email}</div><div style="margin-top:8px"><button class="btn btn-ghost" id="logoutBtn">Logout</button></div></div>`;
+        document.getElementById('logoutBtn').addEventListener('click', ()=>{ localStorage.removeItem('session'); updateAuthUI(); renderWishlist(); renderOrders(); document.getElementById('authForms').style.display='block'; profileBox.style.display='none'; });
+      }else{
+        document.getElementById('authForms').style.display='block'; profileBox.style.display='none';
+      }
+      document.getElementById('accountBtn').textContent = user?user.name:'Login / Register';
+    }
+
+    /************* Navigation smooth scroll *************/
+    document.querySelectorAll('[data-nav]').forEach(a=>a.addEventListener('click', e=>{
+      e.preventDefault(); const target = document.querySelector(a.getAttribute('href')); if(target) target.scrollIntoView({behavior:'smooth'});
+    }));
+
+    // Initial render
+    renderProducts(); renderReviews(); updateAuthUI(); renderWishlist(); renderOrders();
+
+    // Expose small debug to console
+    console.log('Demo initialized. LocalStorage keys: users, products, wishlist, orders, reviews, session');
+  </script>
+</body>
+</html>
